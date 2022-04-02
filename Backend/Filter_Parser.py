@@ -73,8 +73,12 @@ class FilterPhrase:
     def getValue(self) -> str:
         return self.value
 
+    def getTags(self) -> list:
+        return self.tags
+
     def addTag(self, tagLabel: str) -> None:
         self.tag = RelatedTagsSearch(self.getSubject())
+
 
 
 #given a string of the subject ex: curVal, siteRef, will use the provided subject from the phrase to determine 
@@ -91,7 +95,7 @@ def RelatedTagsSearch(subject : str):
     if subject in POINT_TAGS:
         tags.append('POINT')
     else:
-        tag.appemd("Error: Tag Not Found")
+        tags.append("Error: Tag Not Found")
 
 class FilterParser:
     

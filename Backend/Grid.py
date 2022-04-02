@@ -1,3 +1,4 @@
+from ast import IsNot
 import json
 
 
@@ -12,7 +13,7 @@ class Tag_Def:
 #yearbuild
 
 
-#space- floors and rooms of buuldings, hvac zones, lighting, ext
+#space- floors and rooms of buildings, hvac zones, lighting, ext
 #tags- site ref for parent site, space ref tag if contained in another space
 
 #equip- equipmnet that is physical asets
@@ -36,13 +37,43 @@ class Grid:
     #contains meta data
     #version
     #columns 
-    def __init__(self, Version, Metadata, Columns):
+    def __init__(self, Version, Metadata, data):
         self.version = {'version': Version}
         self.metadata = Metadata
-        self.columns = Columns 
+        
 
-    def checkIfColumnExists(self, ColumnName):
-        pass
+        if data == None:
+            self.addData(data) 
+        else:
+            self.columns = []
+            self.rows = []
+
+    #when passed a list of dicts or json of data, will parse through each row and add it to the 
+    def addData(self, data):
+        #check if json- will need to convert to list of dicts
+        if data is type(json):
+            return -2
+
+        #iterate through the list make sure that it is form of list of dicts        
+        if data is type(list):
+            for items in data:
+                #if not a dict within the list send an error
+                if items is not type(dict):
+                    return -1
+                self.addRow(data)
+        
+    def addRow(self, data: dict):
+        self.addColumns(data.keys())
+        self.rows.append(data)
+
+
+
+    def addColumns(self, Columns):
+        for column in Columns:
+            #check if column exists in grid already
+            if column not in self.columns:
+                self.addColumn(column)
+                
 
     def addColumn(self, Column):
         self.columns.append(Column)
@@ -51,4 +82,8 @@ class Grid:
         pass
 
     def JSONToGrid():
+        pass
+
+    #need to create a series of objects to send to the creator, test all individual functions as well
+    if __name__ == "__main__":
         pass
