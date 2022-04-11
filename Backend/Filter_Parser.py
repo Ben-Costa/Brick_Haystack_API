@@ -3,7 +3,7 @@ from tempfile import tempdir
 
 
 FILTER_PHRASES = ['and', 'or']
-PHRASE_COMPARISONS = ['<', '>', '=<', '=<', '==', '!=']
+PHRASE_COMPARISONS = ['<', '>', '=<', '=>', '==', '!=']
 SITE_TAGS = ['geoAddr', 'tz', 'area', 'weatherStationRef', 'yearBuilt', 'geoAddr', 'geoCity', 'geoCountry']
 SPACE_TAGS = ['siteRef', 'spaceRef', 'floor', 'space', 'floorNum', ]
 EQUIPMENT_TAGS = ['siteRef', 'spaceRef', 'equipRef', 'ac', 'elec', 'meter', 'equip', 'water', 'plant']
@@ -25,17 +25,17 @@ class FilterPhrase:
         single_letter = ''
         for i in range(len(FPhrase)):
             if FPhrase[i] in PHRASE_COMPARISONS:
-                print("found a single")
+                #print("found a single")
                 comparison_location = i
                 single_letter = True
                 break
             elif i+2 < len(FPhrase) and FPhrase[i:i+2] in PHRASE_COMPARISONS:
-                print("found a double")
+                #print("found a double")
                 comparison_location = i
                 single_letter = False
                 break
         
-        print(comparison_location)
+        #print(comparison_location)
 
         #set the variables
         if comparison_location != '':
@@ -45,7 +45,7 @@ class FilterPhrase:
                 self.value = FPhrase[comparison_location + 1: len(FPhrase)]
             else:
                 self.subject = FPhrase[0:comparison_location]
-                self.comparison = FPhrase[comparison_location: comparison_location + 1]
+                self.comparison = FPhrase[comparison_location: comparison_location + 2]
                 self.value = FPhrase[comparison_location + 2: len(FPhrase)]
         else:        
             self.subject = FPhrase
@@ -100,7 +100,7 @@ def RelatedTagsSearch(subject : str):
 class FilterParser:
     
     def __init__(self, Request: str):
-        self.phrases = HTML_Request_To_Phrases(Request)
+        self.phrases = Parse_HTML_Request(Request)
 
     def getPhraseList(self) -> list:
         return self.phrases
@@ -186,6 +186,6 @@ if __name__ == '__main__':
         print(i)
 
     testfilterparser = FilterParser(Request3)
-    print(testfilterparser)
+    print(testfilterparser.getPhraseList())
 
 
