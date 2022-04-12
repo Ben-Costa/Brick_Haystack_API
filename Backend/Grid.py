@@ -1,7 +1,7 @@
 from ast import IsNot
 import json
-
-
+import re
+#from bson.objectid import ObjectId
 class Tag_Def:
     
     def __init__(self, TagsValuesList):
@@ -40,27 +40,40 @@ class Grid:
     def __init__(self, Version, Metadata, data):
         self.version = {'version': Version}
         self.metadata = Metadata
+        self.columns = []
+        self.rows = []
         
-
-        if data == None:
+        if data != None:
             self.addData(data) 
         else:
             self.columns = []
             self.rows = []
 
+    def __str__(self):
+        returnString = ""
+        returnString = returnString + "Version: " + self.version['version'] + "\n"
+        returnString = returnString + "Metadata: " + self.metadata + "\n"
+        returnString = returnString + "Columns: " + str(self.columns) + "\n"
+        returnString = returnString + "Rows: " + str(self.rows) + "\n"
+
+        return returnString
+        #return "Version: " + self.version + "\n metadata: " + self.metadata + "\ncolumns: " + self.columns + "\nrows: " + self.rows
+
     #when passed a list of dicts or json of data, will parse through each row and add it to the 
     def addData(self, data):
         #check if json- will need to convert to list of dicts
         if data is type(json):
+            print("The JSON datatype is not supported by the Grid Class currently")
             return -2
 
         #iterate through the list make sure that it is form of list of dicts        
-        if data is type(list):
+        if type(data) == list:
             for items in data:
                 #if not a dict within the list send an error
-                if items is not type(dict):
+                if type(items) != dict:
+                    print("The data within the list for a Grid must be in type Dict")
                     return -1
-                self.addRow(data)
+                self.addRow(items)
         
     def addRow(self, data: dict):
         self.addColumns(data.keys())
@@ -85,5 +98,9 @@ class Grid:
         pass
 
     #need to create a series of objects to send to the creator, test all individual functions as well
-    if __name__ == "__main__":
-        pass
+if __name__ == "__main__":
+    data = [{'id': {'_kind': 'ref', 'val': 'a-0002', 'dis': 'a-0002'}, 'chilled': {'_kind': 'marker'}, 'cmd': {'_kind': 'marker'}, 'cool': {'_kind': 'marker'}, 'cur': {'_kind': 'marker'}, 'dis': 'Alpha Airside AHU-2 Chilled Water Valve', 'equipRef': {'_kind': 'ref', 'val': 'a-0001', 'dis': 'a-0001'}, 'his': {'_kind': 'marker'}, 'kind': 'Number', 'point': {'_kind': 'marker'}, 'siteRef': {'_kind': 'ref', 'val': 'a-0000', 'dis': 'a-0000'}, 'tz': 'Denver', 'unit': '%', 'valve': {'_kind': 'marker'}, 'water': {'_kind': 'marker'}, 'custom': {'description': 'Clg_Valve_Cmd'}}, {'id': {'_kind': 'ref', 'val': 'a-0003', 'dis': 'a-0003'}, 'air': {'_kind': 'marker'}, 'cmd': {'_kind': 'marker'}, 'cur': {'_kind': 'marker'}, 'dis': 'Alpha Airside AHU-2 Discharge Fan Speed', 'discharge': {'_kind': 'marker'}, 'equipRef': {'_kind': 'ref', 'val': 'a-0001', 'dis': 'a-0001'}, 'fan': {'_kind': 'marker'}, 'his': {'_kind': 'marker'}, 'kind': 'Number', 'point': {'_kind': 'marker'}, 'siteRef': {'_kind': 'ref', 'val': 'a-0000', 'dis': 'a-0000'}, 'speed': {'_kind': 'marker'}, 'tz': 'Denver', 'unit': '%', 'custom': {'description': 'SF VFD Signal', 'supply': {'_kind': 'marker'}}}, {'id': {'_kind': 'ref', 'val': 'a-0004', 'dis': 'a-0004'}, 'cmd': {'_kind': 'marker'}, 'cur': {'_kind': 'marker'}, 'dis': 'Alpha Airside AHU-2 Hot Water Valve', 'equipRef': {'_kind': 'ref', 'val': 'a-0001', 'dis': 'a-0001'}, 'heat': {'_kind': 'marker'}, 'his': {'_kind': 'marker'}, 'hot': {'_kind': 'marker'}, 'kind': 'Number', 'point': {'_kind': 'marker'}, 'siteRef': {'_kind': 'ref', 'val': 'a-0000', 'dis': 'a-0000'}, 'tz': 'Denver', 'unit': '%', 'valve': {'_kind': 'marker'}, 'water': {'_kind': 'marker'}, 'custom': {'description': 'Htg_Valve_Cmd'}}, {'id': {'_kind': 'ref', 'val': 'a-0005', 'dis': 'a-0005'}, 'air': {'_kind': 'marker'}, 'cur': {'_kind': 'marker'}, 'dis': 'Alpha Airside AHU-2 Mixed Air Temp', 'equipRef': {'_kind': 'ref', 'val': 'a-0001', 'dis': 'a-0001'}, 'his': {'_kind': 'marker'}, 'kind': 'Number', 'mixed': {'_kind': 'marker'}, 'point': {'_kind': 'marker'}, 'sensor': {'_kind': 'marker'}, 'siteRef': {'_kind': 'ref', 'val': 'a-0000', 'dis': 'a-0000'}, 'temp': {'_kind': 'marker'}, 'tz': 'Denver', 'unit': '°F', 'custom': {'description': 'MAT'}}, {'id': {'_kind': 'ref', 'val': 'a-0006', 'dis': 'a-0006'}, 'air': {'_kind': 'marker'}, 'cmd': {'_kind': 'marker'}, 'cur': {'_kind': 'marker'}, 'damper': {'_kind': 'marker'}, 'dis': 'Alpha Airside AHU-2 Outside Air Damper', 'equipRef': {'_kind': 'ref', 'val': 'a-0001', 'dis': 'a-0001'}, 'his': {'_kind': 'marker'}, 'kind': 'Number', 'outside': {'_kind': 'marker'}, 'point': {'_kind': 'marker'}, 'siteRef': {'_kind': 'ref', 'val': 'a-0000', 'dis': 'a-0000'}, 'tz': 'Denver', 'unit': '%', 'custom': {'description': 'Econ_Cmd'}}, {'id': {'_kind': 'ref', 'val': 'a-0007', 'dis': 'a-0007'}, 'air': {'_kind': 'marker'}, 'cur': {'_kind': 'marker'}, 'dis': 'Alpha Airside AHU-2 Outside Air Enthalpy', 'equipRef': {'_kind': 'ref', 'val': 'a-0001', 'dis': 'a-0001'}, 'his': {'_kind': 'marker'}, 'kind': 'Number', 'outside': {'_kind': 'marker'}, 'point': {'_kind': 'marker'}, 'sensor': {'_kind': 'marker'}, 'siteRef': {'_kind': 'ref', 'val': 'a-0000', 'dis': 'a-0000'}, 'tz': 'Denver', 'unit': 'BTU/lb', 'custom': {'description': 'Enthalpy', 'enthalpy': {'_kind': 'marker'}}}, {'id': {'_kind': 'ref', 'val': 'a-0008', 'dis': 'a-0008'}, 'air': {'_kind': 'marker'}, 'cur': {'_kind': 'marker'}, 'dis': 'Alpha Airside AHU-2 Outside Air Temp', 'equipRef': {'_kind': 'ref', 'val': 'a-0001', 'dis': 'a-0001'}, 'his': {'_kind': 'marker'}, 'kind': 'Number', 'outside': {'_kind': 'marker'}, 'point': {'_kind': 'marker'}, 'sensor': {'_kind': 'marker'}, 'siteRef': {'_kind': 'ref', 'val': 'a-0000', 'dis': 'a-0000'}, 'temp': {'_kind': 'marker'}, 'tz': 'Denver', 'unit': '°F', 'custom': {'dryBulb': {'_kind': 'marker'}, 'description': 'OAT'}}]
+
+    testgird = Grid('0.0.0.000.00001', 'metadata', data)
+
+    print(testgird)
