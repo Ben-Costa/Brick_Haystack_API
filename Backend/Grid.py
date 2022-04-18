@@ -59,6 +59,9 @@ class Grid:
         return returnString
         #return "Version: " + self.version + "\n metadata: " + self.metadata + "\ncolumns: " + self.columns + "\nrows: " + self.rows
 
+    def rowsLength(self):
+        return len(self.rows)
+    
     #when passed a list of dicts or json of data, will parse through each row and add it to the 
     def addData(self, data):
         #check if json- will need to convert to list of dicts

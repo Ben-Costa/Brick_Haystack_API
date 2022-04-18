@@ -1,3 +1,9 @@
+import sys  
+from pathlib import Path  
+file = Path(__file__). resolve()  
+package_root_directory = file.parents [1]  
+sys.path.append(str(package_root_directory)) 
+
 from cgi import test
 import pstats
 from re import A
@@ -13,8 +19,8 @@ import pymongo
 from pymongo import MongoClient
 from pymongo.errors import ConfigurationError, ConnectionFailure, OperationFailure
 from to_ignore import var
-from Filter_Parser import FilterParser, FilterPhrase
-from Grid import Grid
+from Backend.Filter_Parser import FilterParser, FilterPhrase
+from Backend.Grid import Grid
 
 BRICK_HAYSTACK_VERSION = '0.0.00000001'
 METADATA = 'This will be for later metadata'
@@ -33,7 +39,7 @@ class MongoAtlasConnection:
             self.db = db
             self.flatDB = db["HaystackFlatDB"]
             #self.Equipment = db["Equipment"]
-            #self.Points = db["Points"]
+            self.Points = db["Points"]
             #self.Sites = db["Site"]
             #self.Space = db["Space"]
 
@@ -54,7 +60,7 @@ class MongoAtlasConnection:
     def MongoHaystackRetriever(self, Filter: str):
 
         if(Filter == ''):
-            queryResults = connection.flatDB.find()
+            queryResults = self.flatDB.find()
             returnedList = MongoIteratorToList(queryResults)
             returnGrid = Grid(BRICK_HAYSTACK_VERSION, METADATA, returnedList)
             return returnGrid
@@ -67,7 +73,7 @@ class MongoAtlasConnection:
         
 
         #step 4- run the query and return the list of documents
-        queryResults = connection.flatDB.find(json_query)
+        queryResults = self.flatDB.find(json_query)
         
         returnedList = MongoIteratorToList(queryResults)
         returnGrid = Grid(BRICK_HAYSTACK_VERSION, METADATA, returnedList)
@@ -104,7 +110,7 @@ class MongoAtlasConnection:
                     screwUpList.append(item.getSubject() + ".val")
                     screwUpList.append('$lt')
                 elif item.getComparison() == ">":
-                    query = query + "{" + "\"" + item.getSubject() + ".val\"" + " : " "{\"$lgt\": " + "\"" +item.getValue() + "\"}" + "}"
+                    query = query + "{" + "\"" + item.getSubject() + ".val\"" + " : " "{\"$gt\": " + "\"" +item.getValue() + "\"}" + "}"
                     screwUpList.append(item.getSubject() + ".val")
                     screwUpList.append('$lgt')
                 elif item.getComparison() == "=<":
@@ -163,11 +169,14 @@ if __name__ == '__main__':
     #test cases
     Request3 = 'siteRef == a-0000 and point and _id == a-0003' #will change it to be _id = id to get rid of the idobject issues
     Request2 = 'area < 200000'
-    Request1 = ''
+    Request1 = 'curVal =< 10'
     Request0 = 'point'
     Request5 = 'noosdfsd'
+    
+    
     testfilterparser = connection.MongoHaystackRetriever(Request1)
 
     print(testfilterparser)
+    print(testfilterparser.rowsLength())
 
     

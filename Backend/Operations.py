@@ -1,6 +1,12 @@
-from .Grid import Grid
-from Filter_Parser import FilterParser, FilterPhrase
-from MongoDBSoruce import MongoAtlasConnection
+import sys  
+from pathlib import Path  
+file = Path(__file__). resolve()  
+package_root_directory = file.parents [1]  
+sys.path.append(str(package_root_directory)) 
+
+from Backend.Grid import Grid
+from Backend.Filter_Parser import FilterParser, FilterPhrase
+from Backend.MongoDBSoruce import MongoAtlasConnection
 
 def About(Credentials, System=None, Server=None, DataBase=None) -> Grid:
     pass
@@ -8,11 +14,11 @@ def About(Credentials, System=None, Server=None, DataBase=None) -> Grid:
 def Ops(Credentials, ObsList, DataBase=None) -> Grid:
     pass
 
-def Read(Credentials, Filter:str, Limit, DataBase=None) -> Grid:
-    parsedFilter = FilterParser(Filter)
+def ReadHS(Credentials, Filter:str, Limit, DataBase=None) -> Grid:
+    #parsedFilter = FilterParser(Filter)
     dataSource = MongoAtlasConnection()
 
-    returnGrid = MongoAtlasConnection.MongoHaystackRetriever(parsedFilter)
+    returnGrid = dataSource.MongoHaystackRetriever(Filter)
 
     return returnGrid
 
@@ -31,5 +37,12 @@ if __name__ == '__main__':
     Request1 = ''
     Request0 = 'point'
     Request5 = 'noosdfsd'
+    Request111 = 'hvac and thermostat'
 
-    print(Read('Root', Request1, ))
+    print(ReadHS('Root', Request111, 10, 1))
+    #file = open('log.txt', 'w')
+    #print(ReadHS('Root', Request111, 10, 1), file = file)
+
+    #file.close()
+
+    #print(ReadHS('Root', Request1, 10, 1))
