@@ -45,21 +45,8 @@ def home_page():
     else:
         daterange = request.args.get('d')
     
-    #obtain converted filter from request parser
+    #obtain converted filter from request parser- default setting is a empty query
     queryResults = ReadHS(credentials, filter, 10, 1)
-    #return json.load(queryResults)
-    #if not queryResults == '':
-    #    tempstr = str(queryResults)
-    #    return jsonify(tempstr)
-            #call the read api to get the ids that match the filter parameters
-
-    #call the his_read for each item in the object returned by the read api call, append the data to the grid
-
-    #convert grid to response and send back (the ui will handle taking the data and formatting it with provided objects)
-
-    #return str(queryResults)
-
-
 
     return render_template('base.html', returned_data= queryResults.rows)
 
@@ -91,8 +78,6 @@ from requests.api import delete
 from flask_restful import Api, Resource,  reqparse, abort, fields, marshal_with
 from Application import app
 
-#api = Api(app)
-
 
 #About API- When called returns information relating to packages, version, and server
 #Requires- nothing
@@ -122,20 +107,6 @@ from Application import app
 
 #api.add_resource(Defs, "/BrickHayStack/defs")
 
-
-
-#example/test api
-#class HelloWorld(Resource):
-    #def get(self, name, test):
-    #    return {"data": name, "test": test}
-
-#    def get(self, name):
-#        return name
-
-#    def post(self):
-#        return {"data": "Posted"}
-#
-#api.add_resource(HelloWorld, "/helloworld/<string:name>")
 
 
 #class to standardize the http responses

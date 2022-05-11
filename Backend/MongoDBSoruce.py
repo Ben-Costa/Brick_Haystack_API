@@ -168,11 +168,10 @@ def MongoIteratorToList(Iterator):
     return itemList
     
 
+#unit tests
 if __name__ == '__main__':
     connection = MongoAtlasConnection()
 
-
-    #step 1- pass the string to the filter parser and get a filter parser class 
     #test cases
     Request3 = 'siteRef == a-0000 and point and _id == a-0003' #will change it to be _id = id to get rid of the idobject issues
     Request2 = 'area < 200000'

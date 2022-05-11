@@ -4,10 +4,6 @@ from tempfile import tempdir
 
 FILTER_PHRASES = ['and', 'or']
 PHRASE_COMPARISONS = ['<', '>', '=<', '=>', '==', '!=']
-SITE_TAGS = ['geoAddr', 'tz', 'area', 'weatherStationRef', 'yearBuilt', 'geoAddr', 'geoCity', 'geoCountry']
-SPACE_TAGS = ['siteRef', 'spaceRef', 'floor', 'space', 'floorNum', ]
-EQUIPMENT_TAGS = ['siteRef', 'spaceRef', 'equipRef', 'ac', 'elec', 'meter', 'equip', 'water', 'plant']
-POINT_TAGS = ['curVal', 'sensor', 'cmd', 'sp', 'point', 'siteRef', 'equipRef', 'writable', 'unit', 'equipRef', 'fan', 'his', 'minVal', 'maxVal']
 
 ###################tested##########################
 #upon taking in a phrase from HTML_Request_To_Phrases, return a phrase with info relating to structure of 
@@ -36,7 +32,7 @@ class FilterPhrase:
         
         #print(comparison_location)
 
-        #set the variables
+        #set the variables for the phrase structure
         if comparison_location != '':
             if single_letter:
                 self.subject = FPhrase[0:comparison_location]
@@ -75,33 +71,15 @@ class FilterPhrase:
     def getTags(self) -> list:
         return self.tags
 
-    def addTag(self, tagLabel: str) -> None:
-        self.tag = RelatedTagsSearch(self.getSubject())
 
-
-
-#given a string of the subject ex: curVal, siteRef, will use the provided subject from the phrase to determine 
-#what database tags are associated with the phrase: ex: siteRef belongs to Equipment, points, ect
-##or could just take the subject and deal with it in the database as the database may store differently
-def RelatedTagsSearch(subject : str):
-    tags = []
-    if subject in SITE_TAGS:
-        tags.append('SITE')
-    if subject in SPACE_TAGS:
-        tags.append('SPACE')
-    if subject in EQUIPMENT_TAGS:
-        tags.append('EQUIPMENT')
-    if subject in POINT_TAGS:
-        tags.append('POINT')
-    else:
-        tags.append("Error: Tag Not Found")
-
-
+#Class to parse the string request from the user and transfor it into a standardized form that can be utilized by any query interpreter.
+#This works by parsing the request with the Parse_HTML_Request function, which breaks the query up into a structure of connected phrases EX: 'temp < 10.
 class FilterParser:
     
     def __init__(self, Request: str):
         self.phrases = Parse_HTML_Request(Request)
 
+    #returns the list of phrases that resulted from the user query
     def getPhraseList(self) -> list:
         return self.phrases
 
