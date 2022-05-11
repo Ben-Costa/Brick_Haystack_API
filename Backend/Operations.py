@@ -25,21 +25,17 @@ def ReadHS(Credentials, Filter:str, Limit, DataBase=None) -> Grid:
 def His_Read(Credentials, IDs, Date,DataBase=None) -> Grid:
     pass
 
-#todo 
-#1. change id classes and add in more data
-#2. test the read ops
-#3, test the read api call- determine whats retruned and print
-#4. get read api to run on entry into query box
-#5. maybe make the time series collection
+
+
 if __name__ == '__main__':
     Request3 = 'siteRef == a-0000 and point and _id == a-0003' #will change it to be _id = id to get rid of the idobject issues
     Request2 = 'area < 200000'
-    Request1 = ''
+    Request1 = 'area == 3149'
     Request0 = 'point'
     Request5 = 'noosdfsd'
     Request111 = 'hvac and thermostat'
 
-    print(ReadHS('Root', Request111, 10, 1))
+    print(ReadHS('Root', Request1, 10, 1))
     #file = open('log.txt', 'w')
     #print(ReadHS('Root', Request111, 10, 1), file = file)
 

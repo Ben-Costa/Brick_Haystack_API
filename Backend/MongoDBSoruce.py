@@ -1,5 +1,6 @@
 import sys  
-from pathlib import Path  
+from pathlib import Path
+from tokenize import Double  
 file = Path(__file__). resolve()  
 package_root_directory = file.parents [1]  
 sys.path.append(str(package_root_directory)) 
@@ -60,7 +61,7 @@ class MongoAtlasConnection:
     def MongoHaystackRetriever(self, Filter: str):
 
         if(Filter == ''):
-            queryResults = self.flatDB.find()
+            queryResults = self.Points.find()
             returnedList = MongoIteratorToList(queryResults)
             returnGrid = Grid(BRICK_HAYSTACK_VERSION, METADATA, returnedList)
             return returnGrid
@@ -73,7 +74,7 @@ class MongoAtlasConnection:
         
 
         #step 4- run the query and return the list of documents
-        queryResults = self.flatDB.find(json_query)
+        queryResults = self.Points.find(json_query)
         
         returnedList = MongoIteratorToList(queryResults)
         returnGrid = Grid(BRICK_HAYSTACK_VERSION, METADATA, returnedList)
@@ -112,7 +113,7 @@ class MongoAtlasConnection:
                 elif item.getComparison() == ">":
                     query = query + "{" + "\"" + item.getSubject() + ".val\"" + " : " "{\"$gt\": " + "\"" +item.getValue() + "\"}" + "}"
                     screwUpList.append(item.getSubject() + ".val")
-                    screwUpList.append('$lgt')
+                    screwUpList.append('$gt')
                 elif item.getComparison() == "=<":
                     query = query + "{" + "\"" + item.getSubject() + ".val\"" + " : " "{\"$lte\": " + "\"" +item.getValue() + "\"}" + "}"
                     screwUpList.append(item.getSubject() + ".val")
@@ -133,11 +134,13 @@ class MongoAtlasConnection:
         
         query = query[:-1] + "]}"
         
-                #convert the query to a json to be put into the 
+        #convert the query to a json to be put into the 
         json_query = json.loads(query)
 
         counter = 0
         json_list = json_query['$and']
+        #Iterate through the keylist and find all value comparisons. These are currently stored as strings and need to be converted to floats.
+        ###ISSUE: this converts to floats and will not work if the mongo is storing ints. Need to find a way to determine the proper comparison of the value
         for keypair in keyList:
             #if the == case and no internal operator exists in the json
             if(keypair[0] == -1):
@@ -145,14 +148,18 @@ class MongoAtlasConnection:
                 continue
             elif(keypair[1] == 0):
                 if(json_list[counter][keypair[0]].isdigit()):
-                    json_list[counter][keypair[0]] = int(json_list[counter][keypair[0]])
+                    json_list[counter][keypair[0]] = float(json_list[counter][keypair[0]])
+                    print(json_list[counter][keypair[0]])
             else:
                 if(json_list[counter][keypair[0]][keypair[1]].isdigit()):
-                    json_list[counter][keypair[0]][keypair[1]] = int(json_list[counter][keypair[0]][keypair[1]])
+                    json_list[counter][keypair[0]][keypair[1]] = float(json_list[counter][keypair[0]][keypair[1]])
+                    print(json_list[counter][keypair[0]])
             counter = counter + 1
 
         return json_query
 
+
+#This function takes in a mongo iterator and converts it into a python list for easier use
 def MongoIteratorToList(Iterator):
     itemList = []
     for doc in Iterator:

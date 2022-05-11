@@ -24,7 +24,6 @@ from Backend.Operations import Ops, ReadHS
 #parameters- q= "query parameters used to generate the current screen" (optional)
 #            a= "user information"
 #            d= "date rang ex: 2022-1-12,2022-3-12"
-#first calls the 
 @app.route('/', methods = ["GET", "POST"])
 @app.route('/home/', methods = ["GET", "POST"])
 def home_page():         
@@ -58,11 +57,11 @@ def home_page():
 
     #convert grid to response and send back (the ui will handle taking the data and formatting it with provided objects)
 
-    return str(queryResults)
+    #return str(queryResults)
 
 
 
-    #return render_template('base.html')
+    return render_template('base.html', returned_data= queryResults.rows)
 
 #When called, will use the provided filter parameter convert it to a request using the parser request class, call the python read ops
 #sending the request in the call. This will the go off and get the matching data from the provider and then return a grid of the data

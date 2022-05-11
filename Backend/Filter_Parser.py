@@ -9,7 +9,6 @@ SPACE_TAGS = ['siteRef', 'spaceRef', 'floor', 'space', 'floorNum', ]
 EQUIPMENT_TAGS = ['siteRef', 'spaceRef', 'equipRef', 'ac', 'elec', 'meter', 'equip', 'water', 'plant']
 POINT_TAGS = ['curVal', 'sensor', 'cmd', 'sp', 'point', 'siteRef', 'equipRef', 'writable', 'unit', 'equipRef', 'fan', 'his', 'minVal', 'maxVal']
 
-#quality improvements- need to verify, either it has just a subject and nothing else, or has everything, cannot have any other combo
 ###################tested##########################
 #upon taking in a phrase from HTML_Request_To_Phrases, return a phrase with info relating to structure of 
 # 1. the subject (also add in whether it refers to site, equip, ect (use tag names))
@@ -96,6 +95,7 @@ def RelatedTagsSearch(subject : str):
         tags.append('POINT')
     else:
         tags.append("Error: Tag Not Found")
+
 
 class FilterParser:
     

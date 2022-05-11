@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content=">
+        <meta name="description" content="">
         <meta name="keywords" content="Data Engineering, Manufacturing">
         <meta name="author" content="Ben Costa">
      
@@ -31,6 +31,10 @@
                     <button type="submit" class="button_1">Subscribe</button>
                 </form>
                 
+                <!--<p>Returned Query: {{ returned_data.Rows }}</p>-->
+                {% for obj in returned_data %}
+                    <li>{{obj}}</li>
+                {% endfor %}
 
             </div>
         </section>
@@ -43,9 +47,7 @@
 
         
         <footer>
-            <p>
-                POF TECHNOLOGIES, Copyright &copy; 2021
-            </p>
+
             
         </footer>
 
